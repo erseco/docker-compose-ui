@@ -247,9 +247,9 @@ def create_project():
 
     if 'template' in data and data["template"]:
         template_name = COMPOSE_TEMPLATES + '/' + data["template"] + '.yml'
-        if os.path.isfile(template_nae):
+        if os.path.isfile(template_name):
 
-            with open(template_nae, 'r') as template_file:
+            with open(template_name, 'r') as template_file:
                 data["yml"] = template_file.read()
 
     file_path = manage(YML_PATH + '/' + data["name"], data["yml"], False)
