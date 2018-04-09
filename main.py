@@ -22,9 +22,11 @@ from scripts.manage_project import manage
 API_V1 = '/api/v1/'
 YML_PATH = os.getenv('DOCKER_COMPOSE_UI_YML_PATH') or '.'
 COMPOSE_REGISTRY = os.getenv('DOCKER_COMPOSE_REGISTRY')
+COMPOSE_TEMPLATES = os.getenv('COMPOSE_TEMPLATES')
 
 logging.basicConfig(level=logging.INFO)
 app = Flask(__name__, static_url_path='')
+
 
 def load_projects():
     """
@@ -41,7 +43,6 @@ def load_projects():
     logging.info(projects)
 
 load_projects()
-
 
 def get_project_with_name(name):
     """
@@ -244,7 +245,18 @@ def create_project():
     """
     data = loads(request.data)
 
-    file_path = manage(YML_PATH + '/' +  data["name"], data["yml"], False)
+    if 'template' in data and data["template"]:
+        template_nae = COMPOSE_TEMPLATES + '/' + data["template"] + '.yml'
+        if os.path.isfile(template_nae):
+
+            with open(template_nae, 'r') as template_file:
+                data["yml"] = template_file.read()
+
+        template_file = open(YML_PATH + '/' + data["name"] + "/do", "w")
+        template_file.write(data["env"])
+        template_file.close()
+
+    file_path = manage(YML_PATH + '/' + data["name"], data["yml"], False)
 
     if 'env' in data and data["env"]:
         env_file = open(YML_PATH + '/' + data["name"] + "/.env", "w")
