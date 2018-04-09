@@ -252,10 +252,6 @@ def create_project():
             with open(template_nae, 'r') as template_file:
                 data["yml"] = template_file.read()
 
-        template_file = open(YML_PATH + '/' + data["name"] + "/do", "w")
-        template_file.write(data["env"])
-        template_file.close()
-
     file_path = manage(YML_PATH + '/' + data["name"], data["yml"], False)
 
     if 'env' in data and data["env"]:
